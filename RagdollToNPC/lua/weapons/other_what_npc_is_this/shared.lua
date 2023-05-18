@@ -37,11 +37,11 @@ SWEP.Const = 0
 
 function SWEP:PrimaryAttack()
     if SERVER then
-        local trace = self.Owner:GetEyeTrace()
+        local trace = self:GetOwner():GetEyeTrace()
 
         if SERVER then
             if trace.Entity and trace.Entity:IsValid() then
-                local ply = self.Owner
+                local ply = self:GetOwner()
                 ply:SendLua("print( \"-- [RagdollToNpc - Class Print Tool] --\" )")
                 ply:SendLua("print(\"Class of entity you are looking at is: " .. trace.Entity:GetClass() .. "\")")
                 ply:SendLua("notification.AddLegacy( \"Check out the console!\", NOTIFY_GENERIC, 5 )")
@@ -73,8 +73,9 @@ function SWEP:SecondaryAttack()
 end
 
 function SWEP:Reload()
-    if self.Owner:GetInfo("resurect_ragdoll_class_override") ~= "npc_citizen" then
-        self.Owner:ConCommand("resurect_ragdoll_class_override npc_citizen")
-        self.Owner:SendLua("notification.AddLegacy( \"Your resurect_ragdoll_class_override has been reverted to default.\", NOTIFY_ERROR, 5 )")
+	local ownerOfTheSwep = self:GetOwner()
+    if ownerOfTheSwep:GetInfo("resurect_ragdoll_class_override") ~= "npc_citizen" then
+        ownerOfTheSwep:ConCommand("resurect_ragdoll_class_override npc_citizen")
+        ownerOfTheSwep:SendLua("notification.AddLegacy( \"Your resurect_ragdoll_class_override has been reverted to default.\", NOTIFY_ERROR, 5 )")
     end
 end
