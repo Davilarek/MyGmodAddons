@@ -59,8 +59,11 @@ SWEP.Secondary.DefaultClip = -1
 SWEP.Secondary.Automatic = true
 SWEP.Secondary.Ammo = ""
 
-if not ConVarExists("ultrapower_setint") then
-    CreateConVar("ultrapower_setint", '5', FCVAR_ARCHIVE)
+-- if not ConVarExists("ultrapower_setint") then
+--     CreateConVar("ultrapower_setint", '5', FCVAR_ARCHIVE)
+-- end
+if CLIENT then
+    CreateClientConVar("ultrapower_setint", '5', true, true, "", 1, 999999)
 end
 
 --function NumSlider.OnValueChanged( panel, value )
@@ -216,22 +219,23 @@ function SWEP:PrimaryAttack()
 
         if trace.Entity and trace.Entity:IsValid() then
             local e = EffectData()
-            local sliderdamage = GetConVar("ultrapower_setint")
+            -- local sliderdamage = GetConVar("ultrapower_setint")
+            local sliderdamage = ownerOfTheSWEP:GetInfo("ultrapower_setint")
             e:SetEntity(trace.Entity)
             e:SetMagnitude(30)
             e:SetScale(30)
             e:SetRadius(30)
             util.Effect("TeslaHitBoxes", e)
             trace.Entity:EmitSound("ambient/energy/zap" .. math.random(1, 3) .. ".wav")
-            trace.Entity:TakeDamage(sliderdamage:GetInt(), ownerOfTheSWEP)
+            trace.Entity:TakeDamage(tonumber(sliderdamage), ownerOfTheSWEP)
             local bullet = {}
             bullet.Num = 1
             bullet.Src = ownerOfTheSWEP:GetShootPos()
             bullet.Dir = ownerOfTheSWEP:GetAimVector()
             bullet.Spread = 0
             bullet.Tracer = 0
-            bullet.Force = sliderdamage:GetInt()
-            bullet.Damage = sliderdamage:GetInt()
+            bullet.Force = tonumber(sliderdamage)
+            bullet.Damage = tonumber(sliderdamage)
             bullet.AmmoType = "pistol"
             ownerOfTheSWEP:FireBullets(bullet)
         end
