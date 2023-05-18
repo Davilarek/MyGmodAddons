@@ -119,7 +119,8 @@ end
 
 function SWEP:PrimaryAttack()
     self.Weapon:EmitSound("weapons/physcannon/superphys_launch" .. math.random(1, 4) .. ".wav")
-    local trace = self.Owner:GetEyeTrace()
+    local ownerOfTheSWEP = self:GetOwner()
+    local trace = self:GetOwner():GetEyeTrace()
 
     if SERVER then
         -- if self.HeldEnt ~= 0 and self.HeldEnt:IsValid() then
@@ -128,7 +129,7 @@ function SWEP:PrimaryAttack()
         -- end
         local rnd = math.random(1, 99999)
         local TS = ents.Create("info_target")
-        TS:SetPos((self.Owner:GetRight() * 100) + (self.Owner:GetShootPos() + ((self.Owner:GetAimVector() * 50) + Vector(0, 0, -100))))
+        TS:SetPos((ownerOfTheSWEP:GetRight() * 100) + (ownerOfTheSWEP:GetShootPos() + ((ownerOfTheSWEP:GetAimVector() * 50) + Vector(0, 0, -100))))
         TS:SetName("TS" .. rnd)
         local TE = ents.Create("info_target")
         TE:SetPos(trace.HitPos)
@@ -222,17 +223,17 @@ function SWEP:PrimaryAttack()
             e:SetRadius(30)
             util.Effect("TeslaHitBoxes", e)
             trace.Entity:EmitSound("ambient/energy/zap" .. math.random(1, 3) .. ".wav")
-            trace.Entity:TakeDamage(sliderdamage:GetInt(), self.Owner)
+            trace.Entity:TakeDamage(sliderdamage:GetInt(), ownerOfTheSWEP)
             local bullet = {}
             bullet.Num = 1
-            bullet.Src = self.Owner:GetShootPos()
-            bullet.Dir = self.Owner:GetAimVector()
+            bullet.Src = ownerOfTheSWEP:GetShootPos()
+            bullet.Dir = ownerOfTheSWEP:GetAimVector()
             bullet.Spread = 0
             bullet.Tracer = 0
             bullet.Force = sliderdamage:GetInt()
             bullet.Damage = sliderdamage:GetInt()
             bullet.AmmoType = "pistol"
-            self.Owner:FireBullets(bullet)
+            ownerOfTheSWEP:FireBullets(bullet)
         end
     end
 end
